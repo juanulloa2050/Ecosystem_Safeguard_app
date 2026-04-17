@@ -2,20 +2,18 @@
 
 > Detección automática de ganado bovino en imágenes aéreas de dron, con geolocalización GPS y exportación de resultados.
 
-Desarrollado por **EPICS IEEE** como herramienta de monitoreo ambiental y ganadero. Permite procesar lotes de imágenes capturadas desde drones, detectar presencia de ganado usando un modelo YOLO entrenado, visualizar los resultados anotados y ubicarlos en un mapa interactivo a partir de los metadatos GPS de cada imagen.
+Desarrollado por **EPICS IEEE** como herramienta de monitoreo ambiental y ganadero. Permite procesar lotes de imágenes capturadas desde drones, detectar presencia de ganado usando un modelo de visión por computador entrenado, visualizar los resultados anotados y ubicarlos en un mapa interactivo a partir de los metadatos GPS de cada imagen.
 
 ---
 
 ## Tabla de contenidos
 
 - [Características](#características)
-- [Capturas de pantalla](#capturas-de-pantalla)
 - [Requisitos del sistema](#requisitos-del-sistema)
 - [Instalación](#instalación)
 - [Uso](#uso)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Desarrollo y compilación](#desarrollo-y-compilación)
-- [Entorno Conda](#entorno-conda)
+- [Resultados generados](#resultados-generados)
+- [Documentación](#documentación)
 
 ---
 
@@ -33,124 +31,53 @@ Desarrollado por **EPICS IEEE** como herramienta de monitoreo ambiental y ganade
 
 ## Requisitos del sistema
 
-| Requisito | Versión |
+| Requisito | Detalle |
 |-----------|---------|
-| Windows | 10 / 11 (64-bit) |
-| Python | 3.10 |
-| CUDA (opcional) | 12.1 (para aceleración GPU) |
+| Sistema operativo | Windows 10 / 11 (64-bit) |
+| GPU (opcional) | NVIDIA con soporte CUDA 12.1 para mayor velocidad |
 
 ---
 
 ## Instalación
 
-### Opción 1 — Instalador (recomendado)
-
-1. Descargar `EcosystemSafeguard_Setup_0.1.0.exe` desde la carpeta `Installer/installer_out/`
-2. Ejecutar el instalador como administrador
+1. Ejecutar `EcosystemSafeguard_Setup_0.1.0.exe` como administrador
+2. Seguir los pasos del instalador
 3. Abrir **Ecosystem Safeguard** desde el acceso directo en el escritorio
-
-### Opción 2 — Desde el código fuente
-
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/ecosystem-safeguard.git
-cd ecosystem-safeguard
-
-# 2. Crear el entorno conda
-conda env create -f epics-ieee.yaml
-conda activate epics-ieee
-
-# 3. Ejecutar la aplicación
-python gui_app.py
-```
 
 ---
 
 ## Uso
 
-1. **Seleccionar carpeta** — usar el botón **Browse Folder** para elegir la carpeta con las imágenes del dron (`.jpg`, `.jpeg`, `.png`, `.bmp`, `.tiff`, `.webp`)
+1. **Seleccionar carpeta** — usar **Browse Folder** para elegir la carpeta con las imágenes del dron (`.jpg`, `.jpeg`, `.png`, `.bmp`, `.tiff`, `.webp`)
 2. **Iniciar procesamiento** — clic en **Start Processing**; la barra de progreso muestra el avance imagen por imagen
-3. **Inspeccionar resultados** — la vista de inspección muestra cada imagen con los bounding boxes del ganado detectado y su ubicación en el mapa
-4. **Ver resumen** — clic en **View Summary Report** para ver el conteo total y el mapa global con todos los puntos detectados
-5. **Exportar** — clic en **Export Data to Folder...** para guardar las imágenes anotadas, el CSV y los archivos de resultados en la carpeta destino que elijas
+3. **Inspeccionar resultados** — navega por cada imagen con los bounding boxes del ganado detectado y su ubicación en el mapa
+4. **Ver resumen** — clic en **View Summary Report** para el conteo total y el mapa global con todos los puntos detectados
+5. **Exportar** — clic en **Export Data to Folder...** para guardar los resultados en la carpeta que elijas
 
-> Los resultados intermedios se guardan en `%LOCALAPPDATA%\EcosystemSafeguard\output\`
-
----
-
-## Estructura del proyecto
-
-```
-Ecosystem-Safeguard/
-├── gui_app.py                  # Interfaz gráfica (PyQt6)
-├── detector_ganado.py          # Motor de detección (YOLO + GPS)
-├── models/
-│   └── best.pt                 # Modelo entrenado
-├── assets/
-│   ├── app.ico                 # Ícono de la aplicación
-│   └── branding/               # Logos institucionales
-├── Installer/
-│   └── EcosystemSafeguard.iss  # Script de Inno Setup
-├── EcosystemSafeguard.spec     # Configuración de PyInstaller
-├── epics-ieee.yaml             # Entorno Conda reproducible
-└── Manual_de_usuario.pdf       # Manual de usuario
-```
+Para instrucciones detalladas con capturas de pantalla, consultar el [Manual de Usuario](Manual_de_usuario_Ecosystem_Safeguard_App.pdf).
 
 ---
 
-## Desarrollo y compilación
+## Resultados generados
 
-### Compilar el ejecutable
+Los resultados se guardan en `%LOCALAPPDATA%\EcosystemSafeguard\output\` y al exportar contienen:
 
-```bash
-conda activate epics-ieee
-pyinstaller EcosystemSafeguard.spec
-```
-
-Esto genera la carpeta `dist/EcosystemSafeguard/` con todos los archivos necesarios.
-
-### Generar el instalador
-
-1. Abrir `Installer/EcosystemSafeguard.iss` en **Inno Setup Compiler**
-2. Presionar `Ctrl+F9`
-3. El instalador se genera en `Installer/installer_out/EcosystemSafeguard_Setup_0.1.0.exe`
+| Archivo / Carpeta | Descripción |
+|-------------------|-------------|
+| `boxes/` | Imágenes anotadas con bounding boxes |
+| `originales/` | Copia de las imágenes originales con detecciones |
+| `cattle_points.csv` | Coordenadas GPS y conteo de detecciones por imagen |
+| `cattle_detection_manifest.json` | Resumen completo de la sesión en formato JSON |
 
 ---
 
-## Entorno Conda
+## Documentación
 
-El archivo `epics-ieee.yaml` incluye todas las dependencias necesarias:
-
-| Paquete | Versión | Uso |
-|---------|---------|-----|
-| `pytorch` | 2.5.1 + CUDA 12.1 | Backend de inferencia |
-| `ultralytics` | 8.3.225 | Framework YOLO |
-| `opencv-python` | 4.12.0 | Procesamiento de imágenes |
-| `pillow` | 11.1.0 | Lectura de metadatos EXIF |
-| `PyQt6` | — | Interfaz gráfica |
-| `folium` | — | Mapas interactivos |
-
-Para recrear el entorno en otra máquina:
-
-```bash
-conda env create -f epics-ieee.yaml
-conda activate epics-ieee
-```
+- [Manual de Usuario](Manual_de_usuario_Ecosystem_Safeguard_App.pdf) — guía completa de uso de la aplicación
 
 ---
 
-## Logs de depuración
-
-Si la aplicación falla, los logs se guardan automáticamente en:
-
-```
-%LOCALAPPDATA%\EcosystemSafeguard\
-├── trace.log     # Trazabilidad paso a paso
-├── stderr.log    # Errores de Python y crashes nativos
-└── crash.log     # Traceback completo
-```
-
----
+*Desarrollado por EPICS IEEE*
 
 ## Agradecimientos
 Desarrollado con apoyo de:
