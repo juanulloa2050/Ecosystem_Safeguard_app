@@ -19,13 +19,12 @@ Desarrollado por **EPICS IEEE** como herramienta de monitoreo ambiental y ganade
 
 ## Características
 
-- **Detección con IA** — modelo YOLO entrenado específicamente para ganado bovino en imágenes aéreas
+- **Detección con IA** — modelo entrenado específicamente para ganado bovino en imágenes aéreas
 - **Procesamiento por lotes** — analiza carpetas completas de imágenes en un solo paso
 - **Extracción de GPS** — lee coordenadas lat/lon/altitud directamente de los metadatos EXIF de cada imagen
 - **Vista de inspección** — navega imagen por imagen con bounding boxes y mapa de ubicación individual
 - **Resumen de sesión** — conteo total de imágenes procesadas, animales detectados y mapa global con clustering
 - **Exportación** — genera imágenes anotadas, CSV con coordenadas y manifest JSON
-- **Soporte GPU/CPU** — usa CUDA automáticamente si está disponible, con fallback a CPU
 
 ---
 
@@ -34,7 +33,7 @@ Desarrollado por **EPICS IEEE** como herramienta de monitoreo ambiental y ganade
 | Requisito | Detalle |
 |-----------|---------|
 | Sistema operativo | Windows 10 / 11 (64-bit) |
-| GPU (opcional) | NVIDIA con soporte CUDA 12.1 para mayor velocidad |
+| GPU  | NVIDIA con soporte CUDA 12.1 |
 
 ---
 
